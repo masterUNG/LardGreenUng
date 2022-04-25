@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "820541488662",
+    "project_id": "lardgreenung",
+    "storage_bucket": "lardgreenung.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820541488662:android:3a2e672afc6b55640fff37",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.lardgreenung"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820541488662-1ddpmisvh7or1q16klt1jff1a3cb2vos.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8J_0QzzcA-CgYs9nwAagXXGq9_4Gt3jQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820541488662-1ddpmisvh7or1q16klt1jff1a3cb2vos.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

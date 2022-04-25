@@ -1,8 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreenung/states/main_home.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp().then((value) {
+    print('Firebase Initial Success');
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
