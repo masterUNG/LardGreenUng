@@ -11,8 +11,11 @@ class MyDialog {
     required this.context,
   });
 
-  Future<void> normalDialog(
-      {required String title, required String message}) async {
+  Future<void> normalDialog({
+    required String title,
+    required String message,
+    Function()? presFunc,
+  }) async {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -26,10 +29,12 @@ class MyDialog {
         ),
         actions: [
           ShowTextButton(
-              label: 'OK',
-              pressFunc: () {
-                Navigator.pop(context);
-              })
+            label: 'OK',
+            pressFunc: presFunc ??
+                () {
+                  Navigator.pop(context);
+                },
+          ),
         ],
       ),
     );
