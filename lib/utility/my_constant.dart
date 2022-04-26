@@ -7,6 +7,7 @@ class MyConstant {
 
   static String routeMainHome = '/mainHome';
   static String routeHomePage = '/homePage';
+  static String routeSellerService = '/sellerService';
 
   TextStyle h1Style() => TextStyle(
         color: dark,
