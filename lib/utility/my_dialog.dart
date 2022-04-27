@@ -39,4 +39,37 @@ class MyDialog {
       ),
     );
   }
+
+  Future<void> actionDialog({
+    required String title,
+    required String message,
+    required String label1,
+    required String label2,
+    required Function() presFunc1,
+    required Function() presFunc2,
+  }) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: ListTile(
+          leading: const ShowImage(),
+          title: ShowText(
+            lable: title,
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowText(lable: message),
+        ),
+        actions: [
+          ShowTextButton(
+            label: label1,
+            pressFunc: presFunc1,
+          ),
+          ShowTextButton(
+            label: label2,
+            pressFunc: presFunc2,
+          ),
+        ],
+      ),
+    );
+  }
 }

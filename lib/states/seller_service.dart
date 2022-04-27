@@ -6,6 +6,7 @@ import 'package:lardgreenung/states/order_seller.dart';
 import 'package:lardgreenung/states/product_seller.dart';
 import 'package:lardgreenung/states/profile_seller.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
+import 'package:lardgreenung/widgets/show_image.dart';
 import 'package:lardgreenung/widgets/show_menu.dart';
 import 'package:lardgreenung/widgets/show_progess.dart';
 import 'package:lardgreenung/widgets/show_signout.dart';
@@ -20,10 +21,10 @@ class SellerService extends StatefulWidget {
 
 class _SellerServiceState extends State<SellerService> {
   bool load = true;
-
   var widgets = <Widget>[];
-
   int indexWidget = 0;
+  var user = FirebaseAuth.instance.currentUser;
+  UserModle? userModle;
 
   @override
   void initState() {
@@ -32,18 +33,23 @@ class _SellerServiceState extends State<SellerService> {
   }
 
   Future<void> findUser() async {
-    var user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection('user')
         .doc(user!.uid)
         .get()
         .then((value) {
-      UserModle userModle = UserModle.fromMap(value.data()!);
+      userModle = UserModle.fromMap(value.data()!);
       load = false;
 
-      widgets.add(OrderSeller(userModle: userModle));
-      widgets.add(ProfileSeller(userModle: userModle,));
-      widgets.add(ProductSeller());
+      widgets.add(OrderSeller(
+        docIdUser: user!.uid,
+      ));
+      widgets.add(ProfileSeller(
+        docIdUser: user!.uid,
+      ));
+      widgets.add(ProductSeller(
+        docIdUser: user!.uid,
+      ));
 
       setState(() {});
     });
@@ -65,7 +71,24 @@ class _SellerServiceState extends State<SellerService> {
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(accountName: null, accountEmail: null),
+            UserAccountsDrawerHeader(
+              currentAccountPicture: userModle == null
+                  ? const SizedBox()
+                  : userModle!.urlAvatar!.isEmpty
+                      ? const ShowImage(
+                          path: 'images/shop.png',
+                        )
+                      : Image.network(userModle!.urlAvatar!),
+              decoration:
+                  BoxDecoration(color: MyConstant.light.withOpacity(0.5)),
+              accountName: ShowText(
+                lable: userModle == null ? '' : userModle!.name,
+                textStyle: MyConstant().h2Style(),
+              ),
+              accountEmail: ShowText(
+                  lable: userModle == null ? '' : userModle!.email,
+                  textStyle: MyConstant().h3Style()),
+            ),
             ShowMenu(
               title: 'รายการสังของ',
               subTitle: 'Order ที่ลูกค้าสัง',
@@ -101,7 +124,7 @@ class _SellerServiceState extends State<SellerService> {
           ],
         ),
       ),
-      body: load ? const ShowProgress() :widgets[indexWidget] ,
+      body: load ? const ShowProgress() : widgets[indexWidget],
     );
   }
 }
