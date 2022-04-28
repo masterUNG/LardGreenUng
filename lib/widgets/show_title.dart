@@ -14,7 +14,7 @@ class ShowTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.only(left: 16,right: 16,bottom: 8),
       child: ShowText(
         lable: title,
         textStyle: MyConstant().h2Style(),

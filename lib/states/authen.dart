@@ -33,72 +33,74 @@ class _AuthenState extends State<Authen> {
         behavior: HitTestBehavior.opaque,
         onTap: () => FocusScope.of(context).requestFocus(FocusScopeNode()),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShowText(
-                lable: 'ลงชื่อใช้งาน',
-                textStyle: MyConstant().h1Style(),
-              ),
-              ShowForm(
-                label: 'อีเมล์ :',
-                iconData: Icons.email_outlined,
-                changeFunc: (String string) {
-                  email = string.trim();
-                },
-              ),
-              ShowForm(
-                obscue: true,
-                label: 'รหัสผ่าน :',
-                iconData: Icons.lock_outline,
-                changeFunc: (String string) {
-                  password = string.trim();
-                },
-              ),
-              ShowButton(
-                label: 'ลงชื่อใช้งาน',
-                pressFunc: () {
-                  if ((email?.isEmpty ?? true) || (password?.isEmpty ?? true)) {
-                    MyDialog(context: context).normalDialog(
-                        title: 'มีช่องว่าง ?', message: 'กรุณากรอง ทุกช่อง คะ');
-                  } else {
-                    processCheckAuthen();
-                  }
-                },
-              ),
-              SizedBox(
-                width: 250,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ShowTextButton(
-                      label: 'ลืมรหัสผ่าน',
-                      pressFunc: () {},
-                    ),
-                  ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShowText(
+                  lable: 'ลงชื่อใช้งาน',
+                  textStyle: MyConstant().h1Style(),
                 ),
-              ),
-              SizedBox(
-                width: 250,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const ShowText(lable: 'ไม่มีชื่อผู้ใช้งาน ? '),
-                    ShowTextButton(
-                      label: 'สมัครเข้าใช้งาน',
-                      pressFunc: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CreateNewAccount(),
-                            ));
-                      },
-                    ),
-                  ],
+                ShowForm(textInputType: TextInputType.emailAddress,
+                  label: 'อีเมล์ :',
+                  iconData: Icons.email_outlined,
+                  changeFunc: (String string) {
+                    email = string.trim();
+                  },
                 ),
-              )
-            ],
+                ShowForm(
+                  obscue: true,
+                  label: 'รหัสผ่าน :',
+                  iconData: Icons.lock_outline,
+                  changeFunc: (String string) {
+                    password = string.trim();
+                  },
+                ),
+                ShowButton(
+                  label: 'ลงชื่อใช้งาน',
+                  pressFunc: () {
+                    if ((email?.isEmpty ?? true) || (password?.isEmpty ?? true)) {
+                      MyDialog(context: context).normalDialog(
+                          title: 'มีช่องว่าง ?', message: 'กรุณากรอง ทุกช่อง คะ');
+                    } else {
+                      processCheckAuthen();
+                    }
+                  },
+                ),
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShowTextButton(
+                        label: 'ลืมรหัสผ่าน',
+                        pressFunc: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const ShowText(lable: 'ไม่มีชื่อผู้ใช้งาน ? '),
+                      ShowTextButton(
+                        label: 'สมัครเข้าใช้งาน',
+                        pressFunc: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CreateNewAccount(),
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

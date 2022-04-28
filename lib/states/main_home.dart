@@ -6,7 +6,9 @@ import 'package:lardgreenung/states/about_me.dart';
 import 'package:lardgreenung/states/authen.dart';
 import 'package:lardgreenung/states/helper.dart';
 import 'package:lardgreenung/states/home.dart';
+import 'package:lardgreenung/states/show_chart.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
+import 'package:lardgreenung/widgets/show_icon_button.dart';
 import 'package:lardgreenung/widgets/show_image.dart';
 import 'package:lardgreenung/widgets/show_menu.dart';
 import 'package:lardgreenung/widgets/show_progess.dart';
@@ -75,6 +77,18 @@ class _MainHomeState extends State<MainHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          ShowIconButton(
+            iconData: Icons.shopping_cart_outlined,
+            pressFunc: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ShowChart(),
+                  ));
+            },
+          ),
+        ],
         elevation: 0,
         foregroundColor: MyConstant.dark,
         backgroundColor: Colors.white,
@@ -162,8 +176,14 @@ class _MainHomeState extends State<MainHome> {
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: MyConstant.light.withOpacity(0.5)),
             currentAccountPicture: const ShowImage(),
-            accountName: ShowText(lable: userModle!.name, textStyle: MyConstant().h2Style(),),
-            accountEmail: ShowText(lable: userModle!.email, textStyle: MyConstant().h3ActionStyle(),),
+            accountName: ShowText(
+              lable: userModle!.name,
+              textStyle: MyConstant().h2Style(),
+            ),
+            accountEmail: ShowText(
+              lable: userModle!.email,
+              textStyle: MyConstant().h3ActionStyle(),
+            ),
           ),
           ShowMenu(
             title: 'Home',
