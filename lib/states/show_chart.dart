@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lardgreenung/models/sqlite_model.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
 import 'package:lardgreenung/utility/sqlite_helper.dart';
+import 'package:lardgreenung/widgets/show_button.dart';
+import 'package:lardgreenung/widgets/show_icon_button.dart';
 import 'package:lardgreenung/widgets/show_progess.dart';
 import 'package:lardgreenung/widgets/show_text.dart';
 import 'package:lardgreenung/widgets/show_title.dart';
@@ -17,6 +19,7 @@ class _ShowChartState extends State<ShowChart> {
   var sqlModels = <SQliteModel>[];
   bool load = true;
   bool? haveData;
+  int total = 0;
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _ShowChartState extends State<ShowChart> {
   Future<void> readMyChart() async {
     if (sqlModels.isNotEmpty) {
       sqlModels.clear();
+      total = 0;
     }
 
     await SQLiteHelper().readAllDatabase().then((value) {
@@ -37,6 +41,7 @@ class _ShowChartState extends State<ShowChart> {
         for (var item in value) {
           SQliteModel model = item;
           sqlModels.add(model);
+          total = total + int.parse(model.sum);
         }
       }
 
@@ -123,7 +128,103 @@ class _ShowChartState extends State<ShowChart> {
           Divider(
             color: MyConstant.dark,
           ),
-         
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            itemCount: sqlModels.length,
+            itemBuilder: (context, index) => Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: ShowText(lable: sqlModels[index].nameProduct),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ShowText(lable: sqlModels[index].price),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ShowText(lable: sqlModels[index].amount),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ShowText(lable: sqlModels[index].sum),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ShowIconButton(
+                      iconData: Icons.delete_forever,
+                      pressFunc: () async {
+                        await SQLiteHelper()
+                            .deleteWhereId(id: sqlModels[index].id!)
+                            .then((value) {
+                          readMyChart();
+                        });
+                      }),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: MyConstant.dark,
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ShowText(
+                      lable: 'ผลรวมทั้งหมด :',
+                      textStyle: MyConstant().h2Style(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ShowText(
+                      lable: total.toString(),
+                      textStyle: MyConstant().h1Style(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ShowButton(
+                color: Colors.red,
+                width: 150,
+                label: 'Empty Chart',
+                pressFunc: () async {
+                  await SQLiteHelper().deleteAllDatabase().then((value) {
+                    readMyChart();
+                  });
+                },
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              ShowButton(
+                width: 150,
+                label: 'Order',
+                pressFunc: () {
+                  processOrderProduct();
+                },
+              ),
+            ],
+          )
         ],
       );
+
+  Future<void> processOrderProduct() async {
+    
+  }
 }
