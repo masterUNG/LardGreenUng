@@ -80,6 +80,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const ShowText(lable: 'Create By มาสเตอร์​ อึ่ง'),
+              ],
+            ),
           ],
         ),
       ),
