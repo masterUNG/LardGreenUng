@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreenung/models/user_model.dart';
 import 'package:lardgreenung/states/order_seller.dart';
 import 'package:lardgreenung/states/product_seller.dart';
 import 'package:lardgreenung/states/profile_seller.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
+import 'package:lardgreenung/utility/my_dialog.dart';
 import 'package:lardgreenung/widgets/show_image.dart';
 import 'package:lardgreenung/widgets/show_menu.dart';
 import 'package:lardgreenung/widgets/show_progess.dart';
@@ -25,11 +27,35 @@ class _SellerServiceState extends State<SellerService> {
   int indexWidget = 0;
   var user = FirebaseAuth.instance.currentUser;
   UserModle? userModle;
+  String? titleMessage, bodyMessage;
 
   @override
   void initState() {
     super.initState();
     findUser();
+    processMessageing();
+  }
+
+  Future<void> processMessageing() async {
+    await FirebaseMessaging.instance.getToken().then((value) {
+      String token = value.toString();
+      print('token ==> $token');
+    });
+
+    // for OpenApp
+    FirebaseMessaging.onMessage.listen((event) {
+      titleMessage = event.notification!.title;
+      bodyMessage = event.notification!.body;
+      MyDialog(context: context)
+          .normalDialog(title: titleMessage!, message: bodyMessage!);
+    });
+
+    // for CloseApp
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      titleMessage = event.notification!.title;
+      bodyMessage = event.notification!.body;
+      print('message -->> $titleMessage, $bodyMessage');
+    });
   }
 
   Future<void> findUser() async {

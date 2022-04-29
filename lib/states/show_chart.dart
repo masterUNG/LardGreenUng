@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lardgreenung/models/order_product_model.dart';
 import 'package:lardgreenung/models/sqlite_model.dart';
+import 'package:lardgreenung/models/user_model.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
+import 'package:lardgreenung/utility/my_dialog.dart';
 import 'package:lardgreenung/utility/sqlite_helper.dart';
 import 'package:lardgreenung/widgets/show_button.dart';
 import 'package:lardgreenung/widgets/show_icon_button.dart';
@@ -225,6 +231,67 @@ class _ShowChartState extends State<ShowChart> {
       );
 
   Future<void> processOrderProduct() async {
-    
+    var user = FirebaseAuth.instance.currentUser;
+    DateTime dateTime = DateTime.now();
+    Timestamp timeOrder = Timestamp.fromDate(dateTime);
+
+    var docIdProducts = <String>[];
+    var nameProducts = <String>[];
+    var priceProducts = <String>[];
+    var amountProducts = <String>[];
+    var sumProducts = <String>[];
+
+    for (var item in sqlModels) {
+      docIdProducts.add(item.docIdProduct);
+      nameProducts.add(item.nameProduct);
+      priceProducts.add(item.price);
+      amountProducts.add(item.amount);
+      sumProducts.add(item.sum);
+    }
+
+    OrderProductModel orderProductModel = OrderProductModel(
+        uidSeller: sqlModels[0].docIdSeller,
+        uidBuyer: user!.uid,
+        timeOrder: timeOrder,
+        status: 'order',
+        docIdProducts: docIdProducts,
+        nameProducts: nameProducts,
+        priceProducts: priceProducts,
+        amountProducts: amountProducts,
+        sumProducts: sumProducts,
+        total: total.toString());
+
+    await FirebaseFirestore.instance
+        .collection('order')
+        .doc()
+        .set(orderProductModel.toMap())
+        .then((value) async {
+      //Sent Noti to Seller
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(sqlModels[0].docIdSeller)
+          .get()
+          .then((value) async {
+        UserModle userModle = UserModle.fromMap(value.data()!);
+
+        String token = userModle.token;
+        String title = 'มีการสั่งซื่อเกิดขึ้น';
+        String body = 'กรุณาดูที่ Order ด้วย มีการสั่งซื่อสินค้า';
+
+        String path =
+            'https://www.androidthai.in.th/bigc/noti/apiNotiUng.php?isAdd=true&token=$token&title=$title&body=$body';
+
+        await Dio().get(path).then((value) async {
+          print('Success Sent Noti');
+          //Clear Chart
+          await SQLiteHelper().deleteAllDatabase().then((value) {
+            MyDialog(context: context).normalDialog(
+                title: 'Order Success',
+                message: 'ขอบคุณที่ใช้บริการ กรุณารอ การ Confirm จาก ร้านค้า');
+            readMyChart();
+          });
+        });
+      });
+    });
   }
 }

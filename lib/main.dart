@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +20,8 @@ final Map<String, WidgetBuilder> map = {
 String? firstPage;
 
 Future<void> main() async {
+  HttpOverrides.global = MyHttpOverride();
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp().then((value) async {
     if (kIsWeb) {
@@ -62,10 +66,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: map,
       initialRoute: firstPage,
       title: 'Lard Green Ung',
     );
+  }
+}
+
+class MyHttpOverride extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (cert, host, port) => true;
   }
 }
