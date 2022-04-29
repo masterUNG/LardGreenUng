@@ -42,6 +42,7 @@ class _OrderSellerState extends State<OrderSeller> {
 
     var user = FirebaseAuth.instance.currentUser;
     String uid = user!.uid;
+    print('## uid ==> $uid');
 
     await FirebaseFirestore.instance
         .collection('order')
