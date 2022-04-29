@@ -120,7 +120,7 @@ class _AuthenState extends State<Authen> {
           .then((value) async {
         UserModle userModle = UserModle.fromMap(value.data()!);
 
-        print('userModel ===>> ${userModle.toMap()}');
+        print('## userModel ===>> ${userModle.toMap()}');
 
         switch (userModle.status) {
           case 'wait':
