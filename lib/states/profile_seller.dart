@@ -98,6 +98,7 @@ class _ProfileSellerState extends State<ProfileSeller> {
           newDetail(head: 'ร้าน :', value: userModle!.name),
           newDetail(head: 'ที่อยู่ :', value: userModle!.address),
           newDetail(head: 'โทรศัพย์ :', value: userModle!.phone),
+          newDetail(head: 'บัญชีธนาคาร', value: 'aaa'),
           file == null
               ? const SizedBox()
               : ShowButton(

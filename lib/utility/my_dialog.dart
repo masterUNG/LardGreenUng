@@ -47,6 +47,7 @@ class MyDialog {
     required String label2,
     required Function() presFunc1,
     required Function() presFunc2,
+    Widget? contentWidget,
   }) async {
     showDialog(
       context: context,
@@ -58,7 +59,7 @@ class MyDialog {
             textStyle: MyConstant().h2Style(),
           ),
           subtitle: ShowText(lable: message),
-        ),
+        ),content: contentWidget ?? const SizedBox(),
         actions: [
           ShowTextButton(
             label: label1,
