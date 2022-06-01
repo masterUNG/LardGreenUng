@@ -103,25 +103,24 @@ class _ShowChartState extends State<ShowChart> {
           Row(
             children: [
               ShowTitle(title: 'สถานที่จัดส่ง :'),
-               DropdownButton<dynamic>(
-            value: delivery,
-            items: deliverys
-                .map(
-                  (e) => DropdownMenuItem(
-                    child: ShowText(lable: e),
-                    value: e,
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                delivery = value;
-              });
-            },
-          ),
+              DropdownButton<dynamic>(
+                value: delivery,
+                items: deliverys
+                    .map(
+                      (e) => DropdownMenuItem(
+                        child: ShowText(lable: e),
+                        value: e,
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    delivery = value;
+                  });
+                },
+              ),
             ],
           ),
-         
           Divider(
             color: MyConstant.dark,
           ),
@@ -280,16 +279,18 @@ class _ShowChartState extends State<ShowChart> {
     }
 
     OrderProductModel orderProductModel = OrderProductModel(
-        uidSeller: sqlModels[0].docIdSeller,
-        uidBuyer: user!.uid,
-        timeOrder: timeOrder,
-        status: 'order',
-        docIdProducts: docIdProducts,
-        nameProducts: nameProducts,
-        priceProducts: priceProducts,
-        amountProducts: amountProducts,
-        sumProducts: sumProducts,
-        total: total.toString());
+      uidSeller: sqlModels[0].docIdSeller,
+      uidBuyer: user!.uid,
+      timeOrder: timeOrder,
+      status: 'order',
+      docIdProducts: docIdProducts,
+      nameProducts: nameProducts,
+      priceProducts: priceProducts,
+      amountProducts: amountProducts,
+      sumProducts: sumProducts,
+      total: total.toString(),
+      delivery: delivery,
+    );
 
     await FirebaseFirestore.instance
         .collection('order')

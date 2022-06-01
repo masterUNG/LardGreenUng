@@ -90,6 +90,7 @@ class _OrderSellerState extends State<OrderSeller> {
                     ),
                   ],
                 ),
+                
               ],
             ));
           }
@@ -131,48 +132,59 @@ class _OrderSellerState extends State<OrderSeller> {
             itemCount: orderProductModels.length,
             itemBuilder: (context, index) => ExpansionTile(
               children: listWidget[index],
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              title: Column(
                 children: [
-                  ShowText(
-                    lable: 'ผู้ซื้อ : ${userModels[index].name}',
-                    textStyle: MyConstant().h2Style(),
-                  ),
-                  ShowText(
-                      lable: 'สถานะ : ${orderProductModels[index].status}'),
-                  orderProductModels[index].status == 'order' ? ShowIconButton(
-                    iconData: Icons.edit_outlined,
-                    pressFunc: () async {
-                      print('you click ==> $index');
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ShowText(
+                        lable: 'ผู้ซื้อ : ${userModels[index].name}',
+                        textStyle: MyConstant().h2Style(),
+                      ),
+                      ShowText(
+                          lable: 'สถานะ : ${orderProductModels[index].status}'),
+                      orderProductModels[index].status == 'order' ? ShowIconButton(
+                        iconData: Icons.edit_outlined,
+                        pressFunc: () async {
+                          print('you click ==> $index');
 
-                      Map<String, dynamic> map = {};
-                      MyDialog(context: context).actionDialog(
-                          title: 'Choose New Status',
-                          message: 'Please Choose Confire or Cancel',
-                          label1: 'Confirm',
-                          label2: 'Cancel',
-                          presFunc1: () {
-                            map['status'] = 'confirm';
-                            Navigator.pop(context);
-                            processChangeStatus(
-                                docIdOrder: docIdOrders[index],
-                                map: map,
-                                docIdBuyer: orderProductModels[index].uidBuyer);
-                          },
-                          presFunc2: () {
-                            map['status'] = 'cancel';
-                            Navigator.pop(context);
-                            processChangeStatus(
-                                docIdOrder: docIdOrders[index],
-                                map: map,
-                                docIdBuyer: orderProductModels[index].uidBuyer);
-                          });
-                    },
-                  ) : const SizedBox() ,
+                          Map<String, dynamic> map = {};
+                          MyDialog(context: context).actionDialog(
+                              title: 'Choose New Status',
+                              message: 'Please Choose Confire or Cancel',
+                              label1: 'Confirm',
+                              label2: 'Cancel',
+                              presFunc1: () {
+                                map['status'] = 'confirm';
+                                Navigator.pop(context);
+                                processChangeStatus(
+                                    docIdOrder: docIdOrders[index],
+                                    map: map,
+                                    docIdBuyer: orderProductModels[index].uidBuyer);
+                              },
+                              presFunc2: () {
+                                map['status'] = 'cancel';
+                                Navigator.pop(context);
+                                processChangeStatus(
+                                    docIdOrder: docIdOrders[index],
+                                    map: map,
+                                    docIdBuyer: orderProductModels[index].uidBuyer);
+                              });
+                        },
+                      ) : const SizedBox() ,
+                    ],
+                  ),
+                   Row(
+                     children: [
+                       ShowTitle(title: 'สถานที่จัดส่ง : '),
+                       ShowText(lable: orderProductModels[index].delivery)
+                     ],
+                   ),
                 ],
               ),
             ),
-          )
+          ),
+         
         ],
       );
 
