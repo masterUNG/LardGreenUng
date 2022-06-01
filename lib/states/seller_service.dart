@@ -37,9 +37,19 @@ class _SellerServiceState extends State<SellerService> {
   }
 
   Future<void> processMessageing() async {
-    await FirebaseMessaging.instance.getToken().then((value) {
+    await FirebaseMessaging.instance.getToken().then((value) async {
       String token = value.toString();
       print('token ==> $token');
+
+      Map<String, dynamic> map = {};
+      map['token'] = token;
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(user!.uid)
+          .update(map)
+          .then((value) {
+        print('Success Update Token Seller');
+      });
     });
 
     // for OpenApp

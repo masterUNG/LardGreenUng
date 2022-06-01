@@ -134,39 +134,41 @@ class _OrderSellerState extends State<OrderSeller> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ShowTitle(title: 'ผู้ซื้อ : ${userModels[index].name}'),
+                  ShowText(
+                    lable: 'ผู้ซื้อ : ${userModels[index].name}',
+                    textStyle: MyConstant().h2Style(),
+                  ),
                   ShowText(
                       lable: 'สถานะ : ${orderProductModels[index].status}'),
-                  ShowIconButton(
-                      iconData: Icons.edit_outlined,
-                      pressFunc: () async {
-                        print('you click ==> $index');
+                  orderProductModels[index].status == 'order' ? ShowIconButton(
+                    iconData: Icons.edit_outlined,
+                    pressFunc: () async {
+                      print('you click ==> $index');
 
-                        Map<String, dynamic> map = {};
-                        MyDialog(context: context).actionDialog(
-                            title: 'Choose New Status',
-                            message: 'Please Choose Confire or Cancel',
-                            label1: 'Confirm',
-                            label2: 'Cancel',
-                            presFunc1: () {
-                              map['status'] = 'confirm';
-                              Navigator.pop(context);
-                              processChangeStatus(
-                                  docIdOrder: docIdOrders[index],
-                                  map: map,
-                                  docIdBuyer:
-                                      orderProductModels[index].uidBuyer);
-                            },
-                            presFunc2: () {
-                              map['status'] = 'cancel';
-                              Navigator.pop(context);
-                              processChangeStatus(
-                                  docIdOrder: docIdOrders[index],
-                                  map: map,
-                                  docIdBuyer:
-                                      orderProductModels[index].uidBuyer);
-                            });
-                      }),
+                      Map<String, dynamic> map = {};
+                      MyDialog(context: context).actionDialog(
+                          title: 'Choose New Status',
+                          message: 'Please Choose Confire or Cancel',
+                          label1: 'Confirm',
+                          label2: 'Cancel',
+                          presFunc1: () {
+                            map['status'] = 'confirm';
+                            Navigator.pop(context);
+                            processChangeStatus(
+                                docIdOrder: docIdOrders[index],
+                                map: map,
+                                docIdBuyer: orderProductModels[index].uidBuyer);
+                          },
+                          presFunc2: () {
+                            map['status'] = 'cancel';
+                            Navigator.pop(context);
+                            processChangeStatus(
+                                docIdOrder: docIdOrders[index],
+                                map: map,
+                                docIdBuyer: orderProductModels[index].uidBuyer);
+                          });
+                    },
+                  ) : const SizedBox() ,
                 ],
               ),
             ),

@@ -14,6 +14,7 @@ class OrderProductModel {
   final List<String> amountProducts;
   final List<String> sumProducts;
   final String total;
+  final String delivery;
   OrderProductModel({
     required this.uidSeller,
     required this.uidBuyer,
@@ -25,6 +26,7 @@ class OrderProductModel {
     required this.amountProducts,
     required this.sumProducts,
     required this.total,
+    required this.delivery,
   });
 
   Map<String, dynamic> toMap() {
@@ -39,6 +41,7 @@ class OrderProductModel {
       'amountProducts': amountProducts,
       'sumProducts': sumProducts,
       'total': total,
+      'delivery': delivery,
     };
   }
 
@@ -46,17 +49,17 @@ class OrderProductModel {
     return OrderProductModel(
       uidSeller: (map['uidSeller'] ?? '') as String,
       uidBuyer: (map['uidBuyer'] ?? '') as String,
-      timeOrder: (map['timeOrder']),
+      timeOrder: map['timeOrder'],
       status: (map['status'] ?? '') as String,
       docIdProducts: List<String>.from(map['docIdProducts']),
       nameProducts: List<String>.from(map['nameProducts']),
-      priceProducts: List<String>.from(map['priceProducts']),
+      priceProducts: List<String>.from(map['priceProducts'] ),
       amountProducts: List<String>.from(map['amountProducts']),
-      sumProducts: List<String>.from(map['sumProducts']),
+      sumProducts: List<String>.from(map['sumProducts'] ),
       total: (map['total'] ?? '') as String,
+      delivery: (map['delivery'] ?? '') as String,
     );
   }
 
-  factory OrderProductModel.fromJson(String source) =>
-      OrderProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderProductModel.fromJson(String source) => OrderProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

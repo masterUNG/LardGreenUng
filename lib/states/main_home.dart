@@ -37,7 +37,7 @@ class _MainHomeState extends State<MainHome> {
   int indexWidget = 0;
   var user = FirebaseAuth.instance.currentUser;
   UserModle? userModle;
-  String? titleMessage, bodyMessage;
+  String? titleMessage, bodyMessage, token;
 
   @override
   void initState() {
@@ -46,17 +46,31 @@ class _MainHomeState extends State<MainHome> {
     widgetGuests.add(const Home());
     widgetGuests.add(const Helper());
     widgetGuests.add(const AboutMe());
-
     widgetBuyer.add(const Home());
-
+   
     readDataUser();
-    processMessageing();
   }
 
   Future<void> processMessageing() async {
-    await FirebaseMessaging.instance.getToken().then((value) {
-      String token = value.toString();
-      print('token ==> $token');
+    await FirebaseMessaging.instance.getToken().then((value)async {
+      token = value.toString();
+      print('token สำหรับ ผู้ซื้อ ==> $token');
+
+       Map<String, dynamic> map = {};
+        map['token'] = token;
+        await FirebaseFirestore.instance
+            .collection('user')
+            .doc(user!.uid)
+            .update(map)
+            .then((value) {
+          print('UPdate Token Success');
+        });
+
+
+
+
+
+
     });
 
     // for OpenApp
@@ -83,6 +97,8 @@ class _MainHomeState extends State<MainHome> {
       } else {
         logined = true;
         widgets = widgetBuyer;
+
+         processMessageing();
 
         await FirebaseFirestore.instance
             .collection('user')
@@ -182,12 +198,12 @@ class _MainHomeState extends State<MainHome> {
             title: 'สมาชิก',
             iconData: Icons.card_membership,
             tapFunc: () {
-              Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const Authen(),
-                  ));
+                  ),
+                  (route) => false);
             },
           ),
         ],

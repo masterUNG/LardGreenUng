@@ -7,6 +7,7 @@ import 'package:lardgreenung/utility/my_constant.dart';
 import 'package:lardgreenung/utility/my_dialog.dart';
 import 'package:lardgreenung/widgets/show_button.dart';
 import 'package:lardgreenung/widgets/show_form.dart';
+import 'package:lardgreenung/widgets/show_icon_button.dart';
 import 'package:lardgreenung/widgets/show_text.dart';
 import 'package:lardgreenung/widgets/show_text_button.dart';
 
@@ -25,6 +26,12 @@ class _AuthenState extends State<Authen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: ShowIconButton(
+            iconData: Icons.arrow_back_ios,
+            pressFunc: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MyConstant.routeMainHome, (route) => false);
+            }),
         elevation: 0,
         foregroundColor: MyConstant.dark,
         backgroundColor: Colors.white,
@@ -42,7 +49,8 @@ class _AuthenState extends State<Authen> {
                   lable: 'ลงชื่อใช้งาน',
                   textStyle: MyConstant().h1Style(),
                 ),
-                ShowForm(textInputType: TextInputType.emailAddress,
+                ShowForm(
+                  textInputType: TextInputType.emailAddress,
                   label: 'อีเมล์ :',
                   iconData: Icons.email_outlined,
                   changeFunc: (String string) {
@@ -60,9 +68,11 @@ class _AuthenState extends State<Authen> {
                 ShowButton(
                   label: 'ลงชื่อใช้งาน',
                   pressFunc: () {
-                    if ((email?.isEmpty ?? true) || (password?.isEmpty ?? true)) {
+                    if ((email?.isEmpty ?? true) ||
+                        (password?.isEmpty ?? true)) {
                       MyDialog(context: context).normalDialog(
-                          title: 'มีช่องว่าง ?', message: 'กรุณากรอง ทุกช่อง คะ');
+                          title: 'มีช่องว่าง ?',
+                          message: 'กรุณากรอง ทุกช่อง คะ');
                     } else {
                       processCheckAuthen();
                     }
@@ -137,7 +147,8 @@ class _AuthenState extends State<Authen> {
             break;
           case 'approve':
             if (userModle.typeUser == 'buyer') {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MyConstant.routeMainHome, (route) => false);
             } else {
               Navigator.pushNamedAndRemoveUntil(
                   context, MyConstant.routeSellerService, (route) => false);

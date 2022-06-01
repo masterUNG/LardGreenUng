@@ -27,10 +27,18 @@ class _ShowChartState extends State<ShowChart> {
   bool? haveData;
   int total = 0;
 
+  String delivery = 'รพ.รัฐภูมิ';
+  var deliverys = <String>[];
+
   @override
   void initState() {
     super.initState();
     readMyChart();
+    deliverys.add(delivery);
+    deliverys.add('สี่แยกคูหา');
+    deliverys.add('ที่อยู่ของผู้ซื้อ');
+    deliverys.add('เขาพระ');
+    deliverys.add('งาสีทอง');
   }
 
   Future<void> readMyChart() async {
@@ -92,6 +100,28 @@ class _ShowChartState extends State<ShowChart> {
               ShowText(lable: sqlModels[0].nameSeller)
             ],
           ),
+          Row(
+            children: [
+              ShowTitle(title: 'สถานที่จัดส่ง :'),
+               DropdownButton<dynamic>(
+            value: delivery,
+            items: deliverys
+                .map(
+                  (e) => DropdownMenuItem(
+                    child: ShowText(lable: e),
+                    value: e,
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                delivery = value;
+              });
+            },
+          ),
+            ],
+          ),
+         
           Divider(
             color: MyConstant.dark,
           ),
