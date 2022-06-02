@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lardgreenung/models/bank_model.dart';
 import 'package:lardgreenung/models/order_product_model.dart';
 import 'package:lardgreenung/models/user_model.dart';
+import 'package:lardgreenung/states/upload_slip.dart';
 import 'package:lardgreenung/utility/my_constant.dart';
 import 'package:lardgreenung/utility/my_dialog.dart';
 import 'package:lardgreenung/utility/my_firebase.dart';
@@ -24,6 +26,7 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
   var sellerUserModels = <UserModle>[];
   var dateOrders = <String>[];
   var docIdOrders = <String>[];
+  var contentWidgets = <Widget>[];
   bool load = true;
   bool? haveData;
 
@@ -39,6 +42,7 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
       sellerUserModels.clear();
       dateOrders.clear();
       docIdOrders.clear();
+      contentWidgets.clear();
     }
 
     await FirebaseFirestore.instance
@@ -61,12 +65,43 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
           dateOrders.add(MyFirebase().changeTimeStampToDateTime(
               timestamp: orderProductModel.timeOrder));
           docIdOrders.add(element.id);
+
+          var bankModels = await MyFirebase()
+              .processFindBankModel(uid: orderProductModel.uidSeller);
+          Widget widget = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: createAllWidget(bankModels: bankModels),
+          );
+
+          contentWidgets.add(widget);
         }
       }
 
       load = false;
       setState(() {});
     });
+  }
+
+  List<Widget> createAllWidget({required List<BankModel> bankModels}) {
+    Widget widget1;
+    List<Widget> widgets = [];
+
+    for (var element in bankModels) {
+      widget1 = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ShowText(
+            lable: element.nameBank,
+            textStyle: MyConstant().h2ActionStyle(),
+          ),
+          ShowText(lable: 'บัญชี : ${element.nameAccountBank}'),
+          ShowText(lable: 'a/c : ${element.accountBank}'),
+        ],
+      );
+      widgets.add(widget1);
+    }
+    return widgets;
   }
 
   @override
@@ -174,11 +209,31 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
                           label2: 'ปิด',
                           presFunc1: () {
                             Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    UploadSlip(docIdOrder: docIdOrders[index], orderProductModel: orderProductModels[index],),
+                              ),
+                            ).then((value) {
+                              readOrderProduct();
+                            });
                           },
                           presFunc2: () {
                             Navigator.pop(context);
                           },
-                          contentWidget: ShowText(lable: 'ให้โอนเงินจำนวน ${orderProductModels[index].total} บาท', textStyle: MyConstant().h2Style(),),
+                          contentWidget: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ShowText(
+                                lable:
+                                    'ให้โอนเงินจำนวน ${orderProductModels[index].total} บาท',
+                                textStyle: MyConstant().h2Style(),
+                              ),
+                              contentWidgets[index],
+                            ],
+                          ),
                         );
                       },
                     ),

@@ -1,8 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreenung/models/user_model.dart';
+import 'package:lardgreenung/states/about_bank.dart';
 import 'package:lardgreenung/states/order_seller.dart';
 import 'package:lardgreenung/states/product_seller.dart';
 import 'package:lardgreenung/states/profile_seller.dart';
@@ -86,6 +89,9 @@ class _SellerServiceState extends State<SellerService> {
       widgets.add(ProductSeller(
         docIdUser: user!.uid,
       ));
+      widgets.add(AboutBank(
+        uid: user!.uid,
+      ));
 
       setState(() {});
     });
@@ -151,6 +157,16 @@ class _SellerServiceState extends State<SellerService> {
               iconData: Icons.production_quantity_limits,
               tapFunc: () {
                 indexWidget = 2;
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+            ShowMenu(
+              title: 'จัดการบัญชีธนาคาร',
+              subTitle: 'About Bank',
+              iconData: Icons.money,
+              tapFunc: () {
+                indexWidget = 3;
                 Navigator.pop(context);
                 setState(() {});
               },
